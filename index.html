@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เครื่องมือคำนวณจุดสั่งซื้อสินค้าคงคลัง</title>
-    <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom Font */
@@ -15,12 +14,16 @@
             padding: 20px;
             min-height: 100vh;
             color: #ffffff; /* Default text color set to white */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Aligns content to top initially */
         }
 
         /* Gradient for the main button */
         .deep-blue-purple-gradient {
             /* Dark Gray Metallic Gradient */
-            background: linear-gradient(135deg, #374151, #1F2937); 
+            background: linear-gradient(135deg, #374151, #1F2937);
         }
 
         /* Style for dark mode input fields */
@@ -32,8 +35,8 @@
         }
         .dark-input:focus {
             outline: none;
-            box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.5); 
-            border-color: #6b7280; 
+            box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.5);
+            border-color: #6b7280;
         }
         
         /* Custom class for displaying error/warning prominently */
@@ -58,33 +61,26 @@
             max-height: 500px; /* Large enough value to show content */
             opacity: 1;
             padding: 1rem;
+            margin-top: 1rem; /* Added margin for separation */
+        }
+
+        /* Footer positioning */
+        #app-footer {
+            margin-top: 40px;
+            padding: 10px;
+            font-size: 0.8rem;
+            color: #6b7280;
         }
     </style>
 </head>
 <body>
 
-    <!-- INVENTORY CALCULATION SECTION -->
-    <div class="max-w-4xl mx-auto mt-10 bg-gray-900 text-white p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-700"> 
-        <h2 class="text-2xl font-bold mb-6 border-b border-gray-700 pb-2">
-            เครื่องมือคำนวณการสั่งซื้อสินค้าคงคลัง
+    <div class="max-w-xl mx-auto mt-10 bg-gray-900 text-white p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-700"> 
+        <h2 class="text-2xl font-bold mb-6 border-b border-gray-700 pb-2 text-center">
+            เครื่องมือคำนวณจุดสั่งซื้อสินค้าคงคลัง
         </h2>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Product Info -->
-            <div class="col-span-1 md:col-span-2">
-                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
-                    <div class="flex-1">
-                        <label for="productCode" class="block text-sm font-medium text-gray-300">รหัสสินค้า (Product Code)</label>
-                        <input type="text" id="productCode" value="IN000000398" class="mt-1 block w-full p-3 dark-input rounded-lg">
-                    </div>
-                    <div class="flex-1">
-                        <label for="productName" class="block text-sm font-medium text-gray-300">ชื่อสินค้า (Product Name)</label>
-                        <input type="text" id="productName" value="Suction tip plastic [K80]" class="mt-1 block w-full p-3 dark-input rounded-lg">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Inputs -->
+        <div class="grid grid-cols-1 gap-6">
             <div>
                 <label for="soh" class="block text-sm font-medium text-gray-300">Stock On Hand (SOH - จำนวนสินค้าคงคลัง)</label>
                 <input type="number" id="soh" value="100" class="mt-1 block w-full p-3 dark-input rounded-lg" placeholder="หน่วย">
@@ -107,53 +103,49 @@
             คำนวณจุดสั่งซื้อและวันส่งสินค้าที่เหมาะสม
         </button>
 
-        <!-- Results Display -->
         <div id="results" class="mt-8 p-6 bg-gray-800 rounded-xl border border-gray-700 hidden">
             <h3 class="text-xl font-bold text-white mb-4">ผลการคำนวณ:</h3>
             
-            <!-- Main Grid Results -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="p-3 bg-gray-900 rounded-lg border-l-4 border-red-500">
-                    <p class="text-sm text-gray-400">Total Month ปัจจุบัน</p>
+                    <p class="text-xs text-gray-400">Total Month ปัจจุบัน</p>
                     <p class="text-xl font-extrabold text-red-400" id="totalMonthCurrent"></p>
                 </div>
                 <div class="p-3 bg-gray-900 rounded-lg border-l-4 border-cyan-500">
-                    <p class="text-sm text-gray-400">ปริมาณสั่งซื้อ (หน่วย)</p>
+                    <p class="text-xs text-gray-400">ปริมาณสั่งซื้อ (หน่วย)</p>
                     <p class="text-xl font-extrabold text-cyan-400" id="orderQuantity"></p>
                 </div>
                 <div class="p-3 bg-gray-900 rounded-lg border-l-4 border-yellow-500">
-                    <p class="text-sm text-gray-400">วันสั่งซื้อสินค้าที่แนะนำ</p>
-                    <p class="text-lg font-bold text-yellow-400" id="orderDate"></p>
+                    <p class="text-xs text-gray-400">วันสั่งซื้อสินค้าที่แนะนำ</p>
+                    <p class="text-sm font-bold text-yellow-400" id="orderDate"></p>
                 </div>
                 <div class="p-3 bg-gray-900 rounded-lg border-l-4 border-indigo-500">
-                    <p class="text-sm text-gray-400">วันส่งสินค้าที่คาดหวัง</p>
-                    <p class="text-lg font-bold text-indigo-400" id="deliveryDate"></p>
+                    <p class="text-xs text-gray-400">วันส่งสินค้าที่คาดหวัง</p>
+                    <p class="text-sm font-bold text-indigo-400" id="deliveryDate"></p>
                 </div>
             </div>
             
-            <!-- Combined Total Month After Delivery and Button (New Structure) -->
             <div class="mt-4 p-4 bg-gray-900 rounded-lg border-l-4 border-green-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <!-- Text Display (Total Month After Delivery) -->
                 <div>
-                    <!-- Updated text to show dynamic target month -->
-                    <p class="text-sm text-gray-400">Total Month หลังส่งสินค้า (เป้าหมาย <span id="targetMonthDisplay"></span> เดือน)</p>
+                    <p class="text-sm text-gray-400">Total Month หลังส่งสินค้า (เป้าหมาย <span id="targetMonthDisplay" class="font-bold"></span> เดือน)</p>
                     <p class="text-3xl font-extrabold text-green-400" id="postDeliveryMonth"></p>
                 </div>
-                <!-- Button -->
-                <button id="toggleDetailsBtn" onclick="toggleDetails()" class="mt-1 px-5 py-2 bg-gray-600 hover:bg-gray-700 text-white text-base font-semibold rounded-lg transition-colors flex-shrink-0 w-full sm:w-auto">
+                <button id="toggleDetailsBtn" onclick="toggleDetails()" class="mt-1 px-5 py-2 bg-gray-600 hover:bg-gray-700 text-white text-base font-semibold rounded-lg transition-colors flex-shrink-0 w-full sm:w-auto hidden">
                     รายละเอียดเพิ่มเติม
                 </button>
             </div>
             
-            <!-- Details Container (hidden by default) -->
-            <div id="detailMessageContainer" class="mt-4 text-sm text-gray-300 bg-gray-900 rounded-lg hidden">
+            <div id="detailMessageContainer" class="text-sm text-gray-300 bg-gray-900 rounded-lg hidden">
                 <p id="detailMessage"></p>
             </div>
 
-            <!-- Error/Warning Message Box -->
             <div id="errorMessage" class="warning-box text-sm hidden"></div>
         </div>
     </div>
+
+    <footer id="app-footer">
+        Create by Hongte
+    </footer>
 
     <script>
         // ใช้ 30.4375 วัน เป็นค่าเฉลี่ยของจำนวนวันในหนึ่งเดือน
@@ -203,24 +195,25 @@
         }
         
         /**
-         * ค้นหาวันอังคาร (2) หรือวันพฤหัสบดี (4) ที่เร็วที่สุดถัดจากวันนี้ (TODAY) หรือนับรวมวันนี้
+         * ค้นหาวันอังคาร (2) หรือวันพฤหัสบดี (4) ที่เร็วที่สุดถัดจากวันที่กำหนด (รวมวันนี้)
          * @param {Date} date - วันที่เริ่มต้น (วันนี้)
          * @returns {Date} วัน T/Th ที่เร็วที่สุดถัดไป
          */
         function findNextTTh(date) {
             let i = 0;
-            
+            const today = new Date(date.valueOf());
+            today.setHours(0, 0, 0, 0);
+
             // JavaScript getDay(): 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
-            while(true) {
-                let checkDate = addDays(date, i);
+            while(i <= 7) { 
+                let checkDate = addDays(today, i);
                 let dayOfWeek = checkDate.getDay();
                 if (dayOfWeek === 2 || dayOfWeek === 4) { // Tuesday (2) or Thursday (4)
                     return checkDate;
                 }
                 i++;
-                if (i > 7) break; // Safety break
             }
-            return date; // Fallback
+            return today; // Fallback
         }
 
         /**
@@ -290,6 +283,7 @@
                 errorMessage.innerHTML = "Error: กรุณาป้อนข้อมูล **SOH, Usage, และ LT** ให้ครบถ้วนและถูกต้อง (Usage ต้องมากกว่า 0 และค่าทั้งหมดต้องไม่ติดลบ)";
                 errorMessage.classList.remove('hidden');
                 resultsDiv.classList.add('hidden');
+                document.getElementById('toggleDetailsBtn').classList.add('hidden');
                 return;
             }
 
@@ -302,6 +296,7 @@
                     errorMessage.innerHTML = "Error: ค่า **Buffer LT** ที่ป้อนต้องเป็นตัวเลขจำนวนเต็มบวก หรือเว้นว่างไว้";
                     errorMessage.classList.remove('hidden');
                     resultsDiv.classList.add('hidden');
+                    document.getElementById('toggleDetailsBtn').classList.add('hidden');
                     return;
                 }
                 bufferLt = parsedBufferLt;
@@ -309,6 +304,7 @@
             
             errorMessage.classList.add('hidden');
             resultsDiv.classList.remove('hidden');
+            document.getElementById('toggleDetailsBtn').classList.remove('hidden');
             
             // 3. คำนวณ Total Month คงเหลือปัจจุบัน
             const totalMonthCurrent = soh / usage;
@@ -344,8 +340,7 @@
             const initialDeliveryDate = addDays(finalOrderDate, totalLtDays);
             
             // 8. ปรับวันส่งสินค้าให้เป็นวันจันทร์ถัดไปที่เร็วที่สุด
-            const finalDeliveryDate = findNextMonday(initialDeliveryDate);
-            const fixedDeliveryDate = finalDeliveryDate; 
+            const fixedDeliveryDate = findNextMonday(initialDeliveryDate); 
 
             // 9. คำนวณ SOH ที่เหลือในวัน Delivery
             const daysToDelivery = dateDiffInDays(fixedDeliveryDate, today);
@@ -385,7 +380,7 @@
 
 
             let detailMessage = `**วันสั่งซื้อที่แนะนำ (T/Th ถัดไป):** ${orderDateStringThai} (${orderDayName})<br>`;
-            detailMessage += `**Total Lead Time (LT + Buffer LT):** ${totalLtDays} วัน<br>`;
+            detailMessage += `**Total Lead Time (LT + Buffer LT):** ${lt} + ${bufferLt} = ${totalLtDays} วัน<br>`;
             
             // เพิ่มข้อความอธิบายการปรับวันส่งสินค้า
             if (initialDeliveryDateForDisplay.getDay() !== 1) { // 1 = Monday
@@ -393,9 +388,12 @@
             }
             detailMessage += `**วันส่งสินค้าที่คาดหวัง (วันจันทร์):** ${deliveryDateStringThai} (${deliveryDayName})<br>`;
             detailMessage += `**จำนวนวันที่รอสินค้า (นับจากวันนี้ถึงวันส่ง):** ${daysToDelivery} วัน<br>`;
-            detailMessage += `**สินค้าที่เหลือในวันส่ง (SOH-Consumption):** ${soh.toFixed(2)} - ${consumption.toFixed(2)} = ${sohAtDelivery.toFixed(2)} หน่วย<br>`;
+            detailMessage += `**สินค้าที่เหลือในวันส่ง (SOH-Consumption):** ${soh.toFixed(2)} - ${consumption.toFixed(2)} = **${sohAtDelivery.toFixed(2)} หน่วย**<br>`;
             
-            detailMessage += `**ปริมาณที่ต้องสั่งซื้อ** (${orderQty.toFixed(0)} หน่วย) ถูกคำนวณเพื่อให้ Total Month หลังส่งสินค้ามีค่าเป็น **${postDeliveryMonth.toFixed(2)} เดือน** (ตามเป้าหมาย **${targetPostDeliveryMonths.toFixed(1)} เดือน**)`;
+            detailMessage += `<br>**หลักการคำนวณสั่งซื้อ:**<br>`;
+            detailMessage += `- **เป้าหมายสต็อก:** ${targetPostDeliveryMonths.toFixed(1)} เดือน x ${usage} หน่วย/เดือน = **${targetStockUnits.toFixed(2)} หน่วย**<br>`;
+            detailMessage += `- **ปริมาณที่ต้องสั่ง:** เป้าหมายสต็อก (${targetStockUnits.toFixed(2)}) - SOH ณ วันส่ง (${sohAtDelivery.toFixed(2)}) = **${orderQty.toFixed(0)} หน่วย** (ปัดขึ้น)<br>`;
+            detailMessage += `- **Total Month หลังส่ง:** (${sohAtDelivery.toFixed(2)} + ${orderQty.toFixed(0)}) / ${usage} = **${postDeliveryMonth.toFixed(2)} เดือน**`;
             
             // 13. แสดงผลรายละเอียดและจัดการปุ่ม/คำเตือน
             document.getElementById('detailMessage').innerHTML = detailMessage;
@@ -404,7 +402,15 @@
             document.getElementById('toggleDetailsBtn').textContent = 'รายละเอียดเพิ่มเติม'; 
             document.getElementById('toggleDetailsBtn').classList.remove('hidden'); 
 
-            errorMessage.classList.add('hidden');
+            // ตรวจสอบสถานะสต็อกและแสดงคำเตือนเพิ่มเติม
+            if (totalMonthCurrent < 1.0) {
+                 errorMessage.innerHTML = "คำเตือน: สต็อกปัจจุบันต่ำกว่า 1 เดือน! ควรเร่งสั่งซื้อโดยด่วน";
+                 errorMessage.classList.remove('hidden');
+            } else if (orderQty === 0) {
+                 errorMessage.innerHTML = "ข้อมูล: ไม่ต้องสั่งซื้อในตอนนี้ สต็อกปัจจุบันเพียงพอต่อความต้องการถึงวันส่งมอบสินค้าครั้งถัดไป";
+                 errorMessage.classList.remove('hidden');
+            }
+
         }
 
         // Run calculation with default values on load
@@ -414,5 +420,23 @@
     </script>
 </body>
 </html>
+```eof
 
+## ⬆️ ขั้นตอนต่อไปบน GitHub (อัปโหลดโค้ด)
 
+จากรูปภาพที่คุณส่งมา (หน้าจอ `inventory-calculator-app` Repository ที่ว่างเปล่า) ให้ทำตามขั้นตอนดังนี้เพื่ออัปโหลดโค้ด:
+
+1.  **คัดลอกโค้ด:** คัดลอกโค้ด HTML/CSS/JS ทั้งหมดด้านบน
+2.  **สร้างไฟล์ใหม่:** บนหน้าจอ GitHub ที่คุณอยู่ , ให้มองหาข้อความใต้ "Quick setup" แล้วคลิกที่ลิงก์: **`creating a new file`** (สร้างไฟล์ใหม่)
+3.  **ตั้งชื่อไฟล์:** ในช่อง **"Name your file..."** ให้พิมพ์: **`index.html`**
+4.  **วางโค้ด:** วางโค้ดทั้งหมดที่คุณคัดลอกมาลงในช่องแก้ไขเนื้อหา (Content)
+5.  **ยืนยันการบันทึก (Commit):**
+    * เลื่อนลงไปที่ด้านล่าง
+    * ในช่อง "Commit changes" ให้พิมพ์ข้อความสั้น ๆ เช่น: `Update index.html with final calculator logic`
+    * คลิกปุ่มสีเขียว **"Commit changes"**
+
+เมื่อทำขั้นตอนนี้เสร็จ Repository ของคุณจะมีไฟล์ `index.html` ซึ่งเป็นเว็บไซต์ของคุณครับ
+
+### ข้อเสนอถัดไป
+
+หลังจากที่คุณ Commit ไฟล์ `index.html` แล้ว แจ้งให้ผมทราบเพื่อดำเนินการ **ขั้นตอนที่ 3: เปิดใช้งาน GitHub Pages** เพื่อให้เว็บไซต์ของคุณออนไลน์ได้ทันทีครับ
