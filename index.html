@@ -60,7 +60,7 @@
         }
 
         .toggle-container.active {
-            max-height: 500px; /* Large enough value to show content */
+            max-height: 2000px; /* ADJUSTED: Increased max-height to ensure all content fits on mobile */
             opacity: 1;
             padding: 1rem;
             margin-top: 1rem; 
@@ -168,6 +168,7 @@
             
             <!-- Details Container (Toggled by toggleDetails) -->
             <div id="detailMessageContainer" class="toggle-container text-sm text-gray-300 bg-gray-900 rounded-lg hidden">
+                <!-- Content will wrap automatically within the container's width -->
                 <p id="detailMessage"></p>
             </div>
 
