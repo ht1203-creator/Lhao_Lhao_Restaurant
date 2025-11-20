@@ -353,7 +353,7 @@
                 <div class="space-y-8">
                     <div>
                         <h3 class="font-display text-xl font-semibold text-blue-900 mb-4">
-                            <i class="fas fa-map-marker-alt mr-2 text-gold"></i>
+                            <i class="fas fa--marker-alt mr-2 text-gold"></i>
                             Address
                         </h3>
                         <p class="text-gray-600">
@@ -391,26 +391,28 @@
                         </p>
                     </div>
                     
-                    <button onclick="window.open('<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3874.9465383023826!2d100.54276787446007!3d13.782096386612897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29c1c32d1cf51%3A0x108b5833bb2f87f0!2sLhao%20Lhao!5e0!3m2!1sen!2sth!4v1763612675871!5m2!1sen!2sth" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>', '_blank')" 
-                            class="btn-secondary text-white px-6 py-3 rounded-full">
-                        <i class="fas fa-directions mr-2"></i>
-                        Get Directions
-                    </button>
-                </div>
-                
-                <div class="h-96 bg-gray-200 rounded-lg overflow-hidden">
-                    <iframe 
-                        src="<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3874.9465383023826!2d100.54276787446007!3d13.782096386612897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29c1c32d1cf51%3A0x108b5833bb2f87f0!2sLhao%20Lhao!5e0!3m2!1sen!2sth!4v1763612675871!5m2!1sen!2sth" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>" 
-                        width="100%" 
-                        height="100%" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy">
-                    </iframe>
-                </div>
+                    <button onclick="window.open('http://maps.google.com/?daddr=ADDRESS_OR_COORDINATES_HERE', '_blank')" 
+                        class="btn-secondary text-white px-6 py-3 rounded-full">
+                    <i class="fas fa-directions mr-2"></i>
+                    Get Directions
+                </button>
             </div>
+            
+            <div class="h-96 w-full max-w-lg bg-gray-200 rounded-lg overflow-hidden">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12345!2dLONGITUDE!3dLATITUDE!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zPLACE_NAME!5e0!3m2!1sen!2sth!4vTIMESTAMP" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Careers Section -->
     <section id="careers" class="py-20 bg-gray-50 fade-in">
