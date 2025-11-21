@@ -1,1159 +1,716 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ocean Dragon - Authentic Thai-Chinese Seafood Excellence</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Animation Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
-    
-    <style>
-        :root {
-            --ocean-blue: #1e3a8a;
-            --auspicious-red: #dc2626;
-            --gold: #f59e0b;
-            --warm-white: #fefdf8;
-            --charcoal: #374151;
-        }
-        
-        body {
-            font-family: 'Prompt', sans-serif;
-            background-color: var(--warm-white);
-            color: var(--charcoal);
-        }
-        
-        .font-display {
-            font-family: 'Kanit', sans-serif;
-        }
-        
-        .hero-bg {
-            background-image: url('hero-restaurant.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-        
-        .gradient-overlay {
-            background: linear-gradient(135deg, rgba(30, 58, 138, 0.8) 0%, rgba(30, 58, 138, 0.4) 100%);
-        }
-        
-        .menu-card {
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        
-        .menu-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--auspicious-red) 0%, #b91c1c 100%);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, var(--gold) 0%, #d97706 100%);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
-        }
-        
-        .nav-link {
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link:hover {
-            color: var(--gold);
-        }
-        
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--gold);
-        }
-        
-        .mobile-menu {
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-        }
-        
-        .mobile-menu.open {
-            transform: translateY(0);
-        }
-        
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
-        
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-        }
-        
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-        }
-        
-        .particle-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        
-        .form-input {
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-        
-        .form-input:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
-        }
-        
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-        }
-        
-        .admin-panel.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        @media (max-width: 768px) {
-            .hero-bg {
-                background-attachment: scroll;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-lg">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex items-center justify-between">
-                <div class="font-display text-2xl font-bold text-blue-900">
-                    Ocean Dragon
-                </div>
-                
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex space-x-8">
-                    <a href="#home" class="nav-link active">Home</a>
-                    <a href="#story" class="nav-link">Our Story</a>
-                    <a href="#menu" class="nav-link">Menu</a>
-                    <a href="#location" class="nav-link">Location</a>
-                    <a href="#careers" class="nav-link">Careers</a>
-                    <a href="#reservations" class="nav-link">Reservations</a>
-                </div>
-                
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" class="md:hidden p-2">
-                    <i class="fas fa-bars text-2xl"></i>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Mobile Navigation -->
-        <div id="mobile-menu" class="mobile-menu md:hidden bg-white shadow-lg">
-            <div class="container mx-auto px-4 py-4 space-y-4">
-                <a href="#home" class="block nav-link">Home</a>
-                <a href="#story" class="block nav-link">Our Story</a>
-                <a href="#menu" class="block nav-link">Menu</a>
-                <a href="#location" class="block nav-link">Location</a>
-                <a href="#careers" class="block nav-link">Careers</a>
-                <a href="#reservations" class="block nav-link">Reservations</a>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero-bg min-h-screen flex items-center justify-center relative overflow-hidden">
-        <div class="particle-bg" id="particles"></div>
-        <div class="gradient-overlay absolute inset-0"></div>
-        <div class="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-            <h1 class="font-display text-4xl md:text-6xl font-bold mb-6">
-                <span id="typed-text"></span>
-            </h1>
-            <p class="text-lg md:text-xl mb-8 opacity-90">
-                Experience the perfect fusion of authentic Thai spices and traditional Chinese cooking techniques, 
-                crafted with the freshest seafood from local waters.
-            </p>
-            <button onclick="scrollToSection('reservations')" class="btn-primary text-white px-8 py-4 rounded-full text-lg font-semibold">
-                <i class="fas fa-calendar-alt mr-2"></i>
-                Book Your Table Now
-            </button>
-        </div>
-    </section>
+  <head>
 
-    <!-- Our Story Section -->
-    <section id="story" class="py-20 fade-in">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-blue-900 mb-4">Our Story</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Three generations of culinary excellence, blending the bold flavors of Thailand 
-                    with the refined techniques of Chinese cuisine.
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6">
-                    <h3 class="font-display text-2xl font-semibold text-blue-900">
-                        A Legacy of Flavor
-                    </h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Founded in 1985 by Master Chef Chen and his Thai wife Mali, Ocean Dragon began as a small 
-                        family restaurant with a simple vision: to create the perfect harmony between Thai boldness 
-                        and Chinese elegance in every seafood dish.
-                    </p>
-                    <p class="text-gray-600 leading-relaxed">
-                        Today, we continue this tradition using only the freshest catch from local fishermen, 
-                        combined with authentic spices sourced directly from Thailand and China. Our commitment 
-                        to quality and tradition has made us the premier destination for seafood lovers.
-                    </p>
-                    <div class="flex items-center space-x-4 pt-4">
-                        <div class="text-center">
-                            <div class="font-display text-3xl font-bold text-gold">38</div>
-                            <div class="text-sm text-gray-600">Years Experience</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-display text-3xl font-bold text-gold">5★</div>
-                            <div class="text-sm text-gray-600">Customer Rating</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-display text-3xl font-bold text-gold">50+</div>
-                            <div class="text-sm text-gray-600">Signature Dishes</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="splide" id="story-carousel">
-                    <div class="splide__track">
-                        <ul class="splide__list">
-                            <li class="splide__slide">
-                                <img src="https://kimi-web-img.moonshot.cn/img/www.t3architects.com/fdb70e1c83eeb8e2f0cf3f77d8dbd23e0b10c00a.jpg" 
-                                     alt="Restaurant Interior" class="w-full h-80 object-cover rounded-lg shadow-lg">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <title>Klassy Cafe - Restaurant HTML Template</title>
+<!--
+    
+TemplateMo 558 Klassy Cafe
+
+https://templatemo.com/tm-558-klassy-cafe
+
+-->
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+
+    <link rel="stylesheet" href="assets/css/templatemo-klassy-cafe.css">
+
+    <link rel="stylesheet" href="assets/css/owl-carousel.css">
+
+    <link rel="stylesheet" href="assets/css/lightbox.css">
+
+    </head>
+    
+    <body>
+    
+    <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>  
+    <!-- ***** Preloader End ***** -->
+    
+    
+    <!-- ***** Header Area Start ***** -->
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- ***** Logo Start ***** -->
+                        <a href="index.html" class="logo">
+                            <img src="assets/images/klassy-logo.png" align="klassy cafe html template">
+                        </a>
+                        <!-- ***** Logo End ***** -->
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
+                            <li class="scroll-to-section"><a href="#about">About</a></li>
+                           	
+                        <!-- 
+                            <li class="submenu">
+                                <a href="javascript:;">Drop Down</a>
+                                <ul>
+                                    <li><a href="#">Drop Down Page 1</a></li>
+                                    <li><a href="#">Drop Down Page 2</a></li>
+                                    <li><a href="#">Drop Down Page 3</a></li>
+                                </ul>
                             </li>
-                            <li class="splide__slide">
-                                <img src="https://kimi-web-img.moonshot.cn/img/image.freepik.com/20bcb4e2afb2dffbea40c3da66636a6b8c243042.jpg" 
-                                     alt="Chef Cooking" class="w-full h-80 object-cover rounded-lg shadow-lg">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://kimi-web-img.moonshot.cn/img/image.freepik.com/b1cc4b00ef4e6e4f428e16d436b63aa3dd1b3a20.jpg" 
-                                     alt="Kitchen Team" class="w-full h-80 object-cover rounded-lg shadow-lg">
-                            </li>
-                        </ul>
-                    </div>
+                        -->
+                            <li class="scroll-to-section"><a href="#menu">Menu</a></li>
+                            <!-- <li class=""><a rel="sponsored" href="https://templatemo.com" target="_blank">External URL</a></li> -->
+                            <li class="scroll-to-section"><a href="#reservation">Contact Us</a></li> 
+                        </ul>        
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                        <!-- ***** Menu End ***** -->
+                    </nav>
                 </div>
             </div>
         </div>
-    </section>
+    </header>
+    <!-- ***** Header Area End ***** -->
 
-    <!-- Menu Section -->
-    <section id="menu" class="py-20 bg-gray-50 fade-in">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-blue-900 mb-4">Our Menu</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Discover our signature dishes, each crafted with the finest ingredients 
-                    and time-honored recipes passed down through generations.
-                </p>
-            </div>
-            
-            <!-- Menu Filter -->
-            <div class="flex flex-wrap justify-center gap-4 mb-12">
-                <button class="menu-filter active px-6 py-2 rounded-full bg-blue-900 text-white" data-filter="all">All</button>
-                <button class="menu-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700" data-filter="appetizers">Appetizers</button>
-                <button class="menu-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700" data-filter="mains">Main Courses</button>
-                <button class="menu-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700" data-filter="desserts">Desserts</button>
-                <button class="menu-filter px-6 py-2 rounded-full bg-gray-200 text-gray-700" data-filter="beverages">Beverages</button>
-            </div>
-            
-            <!-- Menu Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="menu-grid">
-                <!-- Menu items will be populated by JavaScript -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Location Section -->
-    <section id="location" class="py-20 fade-in">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-blue-900 mb-4">Visit Us</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Located in the heart of the city, we're easily accessible and ready to serve you 
-                    the finest Thai-Chinese seafood experience.
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-12">
-                <div class="space-y-8">
-                    <div>
-                        <h3 class="font-display text-xl font-semibold text-blue-900 mb-4">
-                            <i class="fas fa--marker-alt mr-2 text-gold"></i>
-                            Address
-                        </h3>
-                        <p class="text-gray-600">
-                            123 Dragon Street<br>
-                            Seafood District<br>
-                            Bangkok, Thailand 10100
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <h3 class="font-display text-xl font-semibold text-blue-900 mb-4">
-                            <i class="fas fa-clock mr-2 text-gold"></i>
-                            Opening Hours
-                        </h3>
-                        <div class="space-y-2 text-gray-600">
-                            <div class="flex justify-between">
-                                <span>Monday - Friday</span>
-                                <span>11:00 AM - 10:00 PM</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>Saturday - Sunday</span>
-                                <span>10:00 AM - 11:00 PM</span>
+    <!-- ***** Main Banner Area Start ***** -->
+    <div id="top">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="left-content">
+                        <div class="inner-content">
+                            <h4>LhaoLhao</h4>
+                            <h6>Restaurant</h6>
+                            <div class="main-white-button scroll-to-section">
+                                <a href="#reservation">Make A Reservation</a>
                             </div>
                         </div>
                     </div>
-                    
-                    <div>
-                        <h3 class="font-display text-xl font-semibold text-blue-900 mb-4">
-                            <i class="fas fa-phone mr-2 text-gold"></i>
-                            Contact
-                        </h3>
-                        <p class="text-gray-600">
-                            Phone: +66 2 123 4567<br>
-                            Email: info@oceandragon.com
-                        </p>
+                </div>
+                <div class="col-lg-8">
+                    <div class="main-banner header-text">
+                        <div class="Modern-Slider">
+                          <!-- Item -->
+                          <div class="item">
+                            <div class="img-fill">
+                                <img src="assets/images/slide-01.jpg" alt="">
+                            </div>
+                          </div>
+                          <!-- // Item -->
+                          <!-- Item -->
+                          <div class="item">
+                            <div class="img-fill">
+                                <img src="assets/images/slide-02.jpg" alt="">
+                            </div>
+                          </div>
+                          <!-- // Item -->
+                          <!-- Item -->
+                          <div class="item">
+                            <div class="img-fill">
+                                <img src="assets/images/slide-03.jpg" alt="">
+                            </div>
+                          </div>
+                          <!-- // Item -->
+                        </div>
                     </div>
-                    
-                    <button onclick="window.open('http://maps.google.com/?daddr=ADDRESS_OR_COORDINATES_HERE', '_blank')" 
-                        class="btn-secondary text-white px-6 py-3 rounded-full">
-                    <i class="fas fa-directions mr-2"></i>
-                    Get Directions
-                </button>
+                </div>
             </div>
-            
-            <div class="h-96 w-full max-w-lg bg-gray-200 rounded-lg overflow-hidden">
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3874.9465383023826!2d100.54276787446007!3d13.782096386612897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29c1c32d1cf51%3A0x108b5833bb2f87f0!2sLhao%20Lhao!5e0!3m2!1sen!2sth!4v1763613639677!5m2!1sen!2sth" 
-                    width="100%" 
-                    height="100%" 
-                    style="border:0;" 
-                    allowfullscreen="" 
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
-            </div>
-
         </div>
     </div>
-</section>
+    <!-- ***** Main Banner Area End ***** -->
 
-    <!-- Careers Section -->
-    <section id="careers" class="py-20 bg-gray-50 fade-in">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-blue-900 mb-4">Join Our Team</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Be part of a passionate team that delivers exceptional dining experiences. 
-                    We're always looking for talented individuals to join our family.
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-12">
-                <div>
-                    <h3 class="font-display text-2xl font-semibold text-blue-900 mb-6">Current Openings</h3>
-                    <div class="space-y-4">
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h4 class="font-semibold text-lg text-blue-900">Senior Chef</h4>
-                            <p class="text-gray-600 text-sm mb-2">Minimum 5 years experience in Thai-Chinese cuisine</p>
-                            <span class="text-gold font-semibold">฿40,000 - ฿60,000</span>
+    <!-- ***** About Area Starts ***** -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <div class="left-text-content">
+                        <div class="section-heading">
+                            <h6>About Us</h6>
+                            <h2>We Leave A Delicious Memory For You</h2>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h4 class="font-semibold text-lg text-blue-900">Service Staff</h4>
-                            <p class="text-gray-600 text-sm mb-2">Excellent communication skills, Thai/English preferred</p>
-                            <span class="text-gold font-semibold">฿15,000 - ฿25,000</span>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h4 class="font-semibold text-lg text-blue-900">Kitchen Assistant</h4>
-                            <p class="text-gray-600 text-sm mb-2">Passion for cooking, willing to learn</p>
-                            <span class="text-gold font-semibold">฿12,000 - ฿18,000</span>
+                        <p>Lhao Lhao Restaurant delivers a memorable dining experience, blending fresh ingredients with time-honored recipes. Our space is designed as the perfect gathering spot, whether for a quick lunch or a relaxed evening meal. This website template is crafted to beautifully reflect the warmth and quality that Lhao Lhao offers. You are free to download and use this layout for promoting your restaurant business.</p>
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="assets/images/about-thumb-01.jpg" alt="">
+                            </div>
+                            <div class="col-4">
+                                <img src="assets/images/about-thumb-02.jpg" alt="">
+                            </div>
+                            <div class="col-4">
+                                <img src="assets/images/about-thumb-03.jpg" alt="">
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <div>
-                    <h3 class="font-display text-2xl font-semibold text-blue-900 mb-6">Apply Now</h3>
-                    <form id="career-form" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                            <input type="text" name="name" required 
-                                   class="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none">
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <div class="right-content">
+                        <div class="thumb">
+                            <a rel="nofollow" href="http://youtube.com"><i class="fa fa-play"></i></a>
+                            <img src="assets/images/about-video-bg.jpg" alt="">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                            <input type="email" name="email" required 
-                                   class="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                            <input type="tel" name="phone" required 
-                                   class="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Position</label>
-                            <select name="position" required 
-                                    class="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none">
-                                <option value="">Select Position</option>
-                                <option value="Senior Chef">Senior Chef</option>
-                                <option value="Service Staff">Service Staff</option>
-                                <option value="Kitchen Assistant">Kitchen Assistant</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Experience</label>
-                            <textarea name="experience" rows="4" required 
-                                      class="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none"
-                                      placeholder="Tell us about your relevant experience..."></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Resume (Optional)</label>
-                            <input type="file" name="resume" accept=".pdf,.doc,.docx" 
-                                   class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none">
-                        </div>
-                        <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-semibold">
-                            <i class="fas fa-paper-plane mr-2"></i>
-                            Submit Application
-                        </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+    <!-- ***** About Area Ends ***** -->
 
-    <!-- Reservations Section -->
-    <section id="reservations" class="py-20 fade-in">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-blue-900 mb-4">Make a Reservation</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Reserve your table for an unforgettable dining experience. We recommend booking in advance, 
-                    especially for weekends and holidays.
-                </p>
+    <!-- ***** Menu Area Starts ***** -->
+    <section class="section" id="menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="section-heading">
+                        <h6>Our Menu</h6>
+                        <h2>Our selection of cakes with quality taste</h2>
+                    </div>
+                </div>
             </div>
-            
-            <div class="max-w-2xl mx-auto">
-                <form id="reservation-form" class="bg-white p-8 rounded-lg shadow-lg space-y-6">
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Name *</label>
-                            <input type="text" name="name" required 
-                                   class="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
-                            <input type="tel" name="phone" required 
-                                   class="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none">
-                        </div>
-                    </div>
-                    
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Date *</label>
-                            <input type="date" name="date" required 
-                                   class="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Time *</label>
-                            <select name="time" required 
-                                    class="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none">
-                                <option value="">Select Time</option>
-                                <option value="11:00">11:00 AM</option>
-                                <option value="12:00">12:00 PM</option>
-                                <option value="13:00">1:00 PM</option>
-                                <option value="14:00">2:00 PM</option>
-                                <option value="17:00">5:00 PM</option>
-                                <option value="18:00">6:00 PM</option>
-                                <option value="19:00">7:00 PM</option>
-                                <option value="20:00">8:00 PM</option>
-                                <option value="21:00">9:00 PM</option>
-                            </select>
+        </div>
+        <div class="menu-item-carousel">
+            <div class="col-lg-12">
+                <div class="owl-menu-item owl-carousel">
+                    <div class="item">
+                        <div class='card card1'>
+                            <div class="price"><h6>$14</h6></div>
+                            <div class='info'>
+                              <h1 class='title'>Chocolate Cake</h1>
+                              <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
+                              <div class="main-text-button">
+                                  <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
+                              </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Number of Guests *</label>
-                        <select name="guests" required 
-                                class="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none">
-                            <option value="">Select Guests</option>
-                            <option value="1">1 Person</option>
-                            <option value="2">2 People</option>
-                            <option value="3">3 People</option>
-                            <option value="4">4 People</option>
-                            <option value="5">5 People</option>
-                            <option value="6">6 People</option>
-                            <option value="7">7 People</option>
-                            <option value="8">8+ People</option>
-                        </select>
+                    <div class="item">
+                        <div class='card card2'>
+                            <div class="price"><h6>$22</h6></div>
+                            <div class='info'>
+                              <h1 class='title'>Klassy Pancake</h1>
+                              <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
+                              <div class="main-text-button">
+                                  <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
+                              </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Special Requests</label>
-                        <textarea name="remarks" rows="3" 
-                                  class="form-input w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none"
-                                  placeholder="Any dietary restrictions, special occasions, or seating preferences..."></textarea>
+                    <div class="item">
+                        <div class='card card3'>
+                            <div class="price"><h6>$18</h6></div>
+                            <div class='info'>
+                              <h1 class='title'>Tall Klassy Bread</h1>
+                              <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
+                              <div class="main-text-button">
+                                  <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
+                              </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <input type="hidden" name="timestamp" value="">
-                    
-                    <button type="submit" class="btn-primary w-full text-white py-4 rounded-lg font-semibold text-lg">
-                        <i class="fas fa-calendar-check mr-2"></i>
-                        Confirm Reservation
-                    </button>
-                </form>
+                    <div class="item">
+                        <div class='card card4'>
+                            <div class="price"><h6>$10</h6></div>
+                            <div class='info'>
+                              <h1 class='title'>Blueberry CheeseCake</h1>
+                              <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
+                              <div class="main-text-button">
+                                  <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class='card card5'>
+                            <div class="price"><h6>$8.50</h6></div>
+                            <div class='info'>
+                              <h1 class='title'>Klassy Cup Cake</h1>
+                              <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
+                              <div class="main-text-button">
+                                  <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class='card card3'>
+                            <div class="price"><h6>$7.25</h6></div>
+                            <div class='info'>
+                              <h1 class='title'>Klassic Cake</h1>
+                              <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
+                              <div class="main-text-button">
+                                  <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
+    <!-- ***** Menu Area Ends ***** -->
 
-    <!-- Footer -->
-    <footer class="bg-blue-900 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="text-center">
-                <div class="font-display text-3xl font-bold mb-4">Ocean Dragon</div>
-                <p class="text-blue-200 mb-6">
-                    Authentic Thai-Chinese Seafood Excellence Since 1985
-                </p>
-                <div class="flex justify-center space-x-6 mb-8">
-                    <a href="#" class="text-blue-200 hover:text-gold transition-colors">
-                        <i class="fab fa-facebook text-2xl"></i>
-                    </a>
-                    <a href="#" class="text-blue-200 hover:text-gold transition-colors">
-                        <i class="fab fa-instagram text-2xl"></i>
-                    </a>
-                    <a href="#" class="text-blue-200 hover:text-gold transition-colors">
-                        <i class="fab fa-line text-2xl"></i>
-                    </a>
+    <!-- ***** Reservation Us Area Starts ***** -->
+    <section class="section" id="reservation">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 align-self-center">
+                    <div class="left-text-content">
+                        <div class="section-heading">
+                            <h6>Contact Us</h6>
+                            <h2>Here You Can Make A Reservation Or Just walkin to our cafe</h2>
+                        </div>
+                        <p>The restaurant reserves the right to change reservation conditions or refuse any reservation, entirely at the restaurant's discretion, to ensure the highest quality of service.</p>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="phone">
+                                    <i class="fa fa-phone"></i>
+                                    <h4>Phone Numbers</h4>
+                                    <span><a href="#">02 271 2256</a><br><a href="#">02 271 4260</a></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="message">
+                                    <i class="fa fa-envelope"></i>
+                                    <h4>Emails</h4>
+                                    <span><a href="#">hello@company.com</a><br><a href="#">info@company.com</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="border-t border-blue-800 pt-6">
-                    <p class="text-blue-200 text-sm">
-                        © 2024 Ocean Dragon Restaurant. All rights reserved. | 
-                        <button onclick="showAdminPanel()" class="text-gold hover:underline">Admin Access</button>
-                    </p>
+                <div class="col-lg-6">
+                    <div class="contact-form">
+                        <form id="contact" action="" method="post">
+                          <div class="row">
+                            <div class="col-lg-12">
+                                <h4>Table Reservation</h4>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                              <fieldset>
+                                <input name="name" type="text" id="name" placeholder="Your Name*" required="">
+                              </fieldset>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                              <fieldset>
+                              <input name="email" type="text" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your Email Address" required="">
+                            </fieldset>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                              <fieldset>
+                                <input name="phone" type="text" id="phone" placeholder="Phone Number*" required="">
+                              </fieldset>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                              <fieldset>
+                                <select value="number-guests" name="number-guests" id="number-guests">
+                                    <option value="number-guests">Number Of Guests</option>
+                                    <option name="1" id="1">1</option>
+                                    <option name="2" id="2">2</option>
+                                    <option name="3" id="3">3</option>
+                                    <option name="4" id="4">4</option>
+                                    <option name="5" id="5">5</option>
+                                    <option name="6" id="6">6</option>
+                                    <option name="7" id="7">7</option>
+                                    <option name="8" id="8">8</option>
+                                    <option name="9" id="9">9</option>
+                                    <option name="10" id="10">10</option>
+                                    <option name="11" id="11">11</option>
+                                    <option name="12" id="12">12</option>
+                                </select>
+                              </fieldset>
+                            </div>
+                            <div class="col-lg-6">
+                                <div id="filterDate2">    
+                                  <div class="input-group date" data-date-format="dd/mm/yyyy">
+                                    <input  name="date" id="date" type="text" class="form-control" placeholder="dd/mm/yyyy">
+                                    <div class="input-group-addon" >
+                                      <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+                                  </div>
+                                </div>   
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                              <fieldset>
+                                <select value="time" name="time" id="time">
+                                    <option value="time">Time</option>
+                                    <option name="15:00" id="15:00">15:00</option>
+                                    <option name="16:00" id="16:00">16:00</option>
+                                    <option name="17:00" id="17:00">17:00</option>
+                                    <option name="18:00" id="18:00">18:00</option>
+                                    <option name="19:00" id="19:00">19:00</option>
+                                    <option name="20:00" id="20:00">20:00</option>                            
+                                    <option name="21:00" id="21:00">21:00</option>
+                                    <option name="22:00" id="22:00">22:00</option>
+                                    <option name="23:00" id="23:00">23:00</option>
+                                    <option name="24:00" id="24:00">24:00</option> 
+                                </select>
+                              </fieldset>
+                            </div>
+                            <div class="col-lg-12">
+                              <fieldset>
+                                <textarea name="message" rows="6" id="message" placeholder="Message" required=""></textarea>
+                              </fieldset>
+                            </div>
+                            <div class="col-lg-12">
+                              <fieldset>
+                                <button type="submit" id="form-submit" class="main-button-icon">Make A Reservation</button>
+                              </fieldset>
+                            </div>
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ***** Reservation Area Ends ***** -->
+
+    <!-- ***** Menu Area Starts ***** -->
+    <section class="section" id="offers">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 offset-lg-4 text-center">
+                    <div class="section-heading">
+                        <h6>Menu Recommend</h6>
+                        <h2>This Week’s Special Offers</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row" id="tabs">
+                        <div class="col-lg-12">
+                            <div class="heading-tabs">
+                                <div class="row">
+                                    <div class="col-lg-6 offset-lg-3">
+                                        <ul>
+                                          <li><a href='#tabs-1'><img src="assets/images/tab-icon-01.png" alt="">Food</a></li>
+                                          <li><a href='#tabs-2'><img src="assets/images/tab-icon-02.png" alt="">Desserts</a></a></li>
+                                          <li><a href='#tabs-3'><img src="assets/images/tab-icon-03.png" alt="">Drinks</a></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <section class='tabs-content'>
+                                <article id='tabs-1'>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <div class="left-list">
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-01.png" alt="">
+                                                            <h4>Fresh Chicken Salad</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$10.50</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-02.png" alt="">
+                                                            <h4>Orange Juice</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$8.50</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-03.png" alt="">
+                                                            <h4>Fruit Salad</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$9.90</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <div class="right-list">
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-04.png" alt="">
+                                                            <h4>Eggs Omelette</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$6.50</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-05.png" alt="">
+                                                            <h4>Dollma Pire</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$5.00</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-06.png" alt="">
+                                                            <h4>Omelette & Cheese</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$4.10</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>  
+                                <article id='tabs-2'>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <div class="left-list">
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-04.png" alt="">
+                                                            <h4>Eggs Omelette</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$14</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-05.png" alt="">
+                                                            <h4>Dollma Pire</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$18</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-06.png" alt="">
+                                                            <h4>Omelette & Cheese</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$22</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <div class="right-list">
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-01.png" alt="">
+                                                            <h4>Fresh Chicken Salad</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$10</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-02.png" alt="">
+                                                            <h4>Orange Juice</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$20</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-03.png" alt="">
+                                                            <h4>Fruit Salad</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$30</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>  
+                                <article id='tabs-3'>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <div class="left-list">
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-05.png" alt="">
+                                                            <h4>Eggs Omelette</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$14</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-03.png" alt="">
+                                                            <h4>Orange Juice</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$18</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-02.png" alt="">
+                                                            <h4>Fruit Salad</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$10</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <div class="right-list">
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-06.png" alt="">
+                                                            <h4>Fresh Chicken Salad</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$8.50</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-01.png" alt="">
+                                                            <h4>Dollma Pire</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$9</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="tab-item">
+                                                            <img src="assets/images/tab-item-04.png" alt="">
+                                                            <h4>Omelette & Cheese</h4>
+                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                            <div class="price">
+                                                                <h6>$11</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>   
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ***** Chefs Area Ends ***** --> 
+    
+    <!-- ***** Footer Start ***** -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-xs-12">
+                    <div class="right-text-content">
+                            <ul class="social-icons">
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                            </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="logo">
+                        <a href="index.html"><img src="assets/images/white-logo.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs-12">
+                    <div class="left-text-content">
+                        <p>© Copyright Klassy Cafe Co.
+                        
+                        <br>Design: TemplateMo</p>
+                    </div>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Image Modal -->
-    <div id="image-modal" class="modal">
-        <img id="modal-image" src="" alt="">
-        <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-4xl hover:text-gold">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
+    <!-- jQuery -->
+    <script src="assets/js/jquery-2.1.0.min.js"></script>
 
-    <!-- Admin Panel -->
-    <div id="admin-panel" class="admin-panel">
-        <div class="bg-white p-8 rounded-lg max-w-4xl w-full mx-4 max-h-screen overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="font-display text-2xl font-bold text-blue-900">Admin Dashboard</h2>
-                <button onclick="hideAdminPanel()" class="text-gray-500 hover:text-red-500">
-                    <i class="fas fa-times text-2xl"></i>
-                </button>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="font-semibold text-lg text-blue-900 mb-4">Upload Menu Images</h3>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                        <input type="file" id="image-upload" multiple accept="image/*" class="hidden">
-                        <button onclick="document.getElementById('image-upload').click()" 
-                                class="btn-secondary text-white px-6 py-3 rounded-lg">
-                            <i class="fas fa-upload mr-2"></i>
-                            Choose Images
-                        </button>
-                        <p class="text-sm text-gray-600 mt-2">Select up to 12 images for menu items</p>
-                    </div>
-                    
-                    <div id="upload-preview" class="mt-4 grid grid-cols-3 gap-2"></div>
-                </div>
-                
-                <div>
-                    <h3 class="font-semibold text-lg text-blue-900 mb-4">Restaurant Analytics</h3>
-                    <div class="h-64" id="analytics-chart"></div>
-                </div>
-            </div>
-            
-            <div class="mt-8">
-                <h3 class="font-semibold text-lg text-blue-900 mb-4">Menu Management</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="bg-gray-100">
-                                <th class="text-left p-3">Item</th>
-                                <th class="text-left p-3">Category</th>
-                                <th class="text-left p-3">Price</th>
-                                <th class="text-left p-3">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="menu-table">
-                            <!-- Table rows will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Bootstrap -->
+    <script src="assets/js/popper.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
 
+    <!-- Plugins -->
+    <script src="assets/js/owl-carousel.js"></script>
+    <script src="assets/js/accordions.js"></script>
+    <script src="assets/js/datepicker.js"></script>
+    <script src="assets/js/scrollreveal.min.js"></script>
+    <script src="assets/js/waypoints.min.js"></script>
+    <script src="assets/js/jquery.counterup.min.js"></script>
+    <script src="assets/js/imgfix.min.js"></script> 
+    <script src="assets/js/slick.js"></script> 
+    <script src="assets/js/lightbox.js"></script> 
+    <script src="assets/js/isotope.js"></script> 
+    
+    <!-- Global Init -->
+    <script src="assets/js/custom.js"></script>
     <script>
-        // Menu data
-        const menuData = [
-            {
-                id: 1,
-                name: "Thai Chili Crab",
-                category: "mains",
-                price: "฿580",
-                image: "https://kimi-web-img.moonshot.cn/img/www.mythaicooking.com/9718d5052518be011d6f9ba38a9444265c35793c.jpg",
-                description: "Fresh crab stir-fried with authentic Thai chili sauce"
-            },
-            {
-                id: 2,
-                name: "Seafood Tower",
-                category: "appetizers",
-                price: "฿1,200",
-                image: "https://kimi-web-img.moonshot.cn/img/thepolishedchef.com/873c382aaa0d431d293ce8042c1408829e1ab04a.jpg",
-                description: "Premium selection of fresh seafood on ice"
-            },
-            {
-                id: 3,
-                name: "Chinese Steamed Fish",
-                category: "mains",
-                price: "฿450",
-                image: "https://kimi-web-img.moonshot.cn/img/www.seriouseats.com/224eaf30ad4c076139c0f363a62b08e3ca062145.jpg",
-                description: "Whole fish steamed with ginger and scallions"
-            },
-            {
-                id: 4,
-                name: "Seafood Paella",
-                category: "mains",
-                price: "฿680",
-                image: "https://kimi-web-img.moonshot.cn/img/simply-delicious-food.com/3292a2c7574044fc5e53cb0b09d6c2ab6da2c170.jpg",
-                description: "Spanish rice with mixed seafood"
-            },
-            {
-                id: 5,
-                name: "Lobster Platter",
-                category: "mains",
-                price: "฿1,500",
-                image: "https://kimi-web-img.moonshot.cn/img/images.squarespace-cdn.com/e7010cd30eec033edb94a97f644a6c6953fc019a.jpg",
-                description: "Whole lobster with garlic butter sauce"
-            },
-            {
-                id: 6,
-                name: "Seafood Pasta",
-                category: "mains",
-                price: "฿380",
-                image: "https://kimi-web-img.moonshot.cn/img/www.foodandwine.com/1a3ffa7ebb14ea9e8cce20116f1ff4a5161ecb36.jpg",
-                description: "Fresh pasta with mixed seafood in white wine sauce"
-            },
-            {
-                id: 7,
-                name: "Dim Sum Platter",
-                category: "appetizers",
-                price: "฿320",
-                image: "https://kimi-web-img.moonshot.cn/img/img.freepik.com/7a41be32dc82c96861c40bcc9b7f9d61347e33c8.jpg",
-                description: "Assorted steamed and fried dim sum"
-            },
-            {
-                id: 8,
-                name: "Mango Sticky Rice",
-                category: "desserts",
-                price: "฿180",
-                image: "https://kimi-web-img.moonshot.cn/img/wallsdesk.com/fee6d8d8faaa801c06df3c39ad69d8f4038bb460.jpg",
-                description: "Traditional Thai dessert with coconut milk"
-            },
-            {
-                id: 9,
-                name: "Thai Iced Tea",
-                category: "beverages",
-                price: "฿120",
-                image: "https://kimi-web-img.moonshot.cn/img/img.freepik.com/f5e84f098c91aa3cfd5fde9e217b81664da98afc.jpg",
-                description: "Authentic Thai tea with condensed milk"
-            },
-            {
-                id: 10,
-                name: "Grilled Prawns",
-                category: "appetizers",
-                price: "฿420",
-                image: "https://kimi-web-img.moonshot.cn/img/image.freepik.com/736dbbef83d1c73eb4655074c53f3a292433a8a0.jpg",
-                description: "Large prawns grilled with Thai herbs"
-            },
-            {
-                id: 11,
-                name: "Coconut Pudding",
-                category: "desserts",
-                price: "฿150",
-                image: "https://kimi-web-img.moonshot.cn/img/www.thespruceeats.com/da97175999737101e82cc303e7a02038e83406e1.jpg",
-                description: "Traditional coconut custard dessert"
-            },
-            {
-                id: 12,
-                name: "Herbal Tea",
-                category: "beverages",
-                price: "฿100",
-                image: "https://kimi-web-img.moonshot.cn/img/img.freepik.com/179b44b4b21714b061d1ba926c6eb4b4f528b485.jpg",
-                description: "Refreshing blend of Thai herbs"
-            }
-        ];
 
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeTypewriter();
-            initializeScrollAnimations();
-            initializeMobileMenu();
-            initializeMenuGrid();
-            initializeStoryCarousel();
-            initializeForms();
-            initializeParticles();
-            initializeAdminPanel();
+        $(function() {
+            var selectedClass = "";
+            $("p").click(function(){
+            selectedClass = $(this).attr("data-rel");
+            $("#portfolio").fadeTo(50, 0.1);
+                $("#portfolio div").not("."+selectedClass).fadeOut();
+            setTimeout(function() {
+              $("."+selectedClass).fadeIn();
+              $("#portfolio").fadeTo(50, 1);
+            }, 500);
+                
+            });
         });
 
-        // Typewriter effect for hero
-        function initializeTypewriter() {
-            new Typed('#typed-text', {
-                strings: ['Authentic Thai-Chinese Seafood Excellence', 'Fresh Catch Daily', 'Three Generations of Perfection'],
-                typeSpeed: 50,
-                backSpeed: 30,
-                backDelay: 2000,
-                loop: true,
-                showCursor: true,
-                cursorChar: '|'
-            });
-        }
-
-        // Scroll animations
-        function initializeScrollAnimations() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('.fade-in').forEach(el => {
-                observer.observe(el);
-            });
-        }
-
-        // Mobile menu
-        function initializeMobileMenu() {
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('open');
-            });
-
-            // Close mobile menu when clicking on a link
-            document.querySelectorAll('#mobile-menu a').forEach(link => {
-                link.addEventListener('click', () => {
-                    mobileMenu.classList.remove('open');
-                });
-            });
-        }
-
-        // Menu grid initialization
-        function initializeMenuGrid() {
-            renderMenuGrid(menuData);
-            initializeMenuFilters();
-        }
-
-        function renderMenuGrid(data) {
-            const grid = document.getElementById('menu-grid');
-            grid.innerHTML = '';
-
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = `menu-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer ${item.category}`;
-                card.innerHTML = `
-                    <div class="relative">
-                        <img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover">
-                        <div class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                            ${item.price}
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-display text-xl font-semibold text-blue-900 mb-2">${item.name}</h3>
-                        <p class="text-gray-600 text-sm">${item.description}</p>
-                    </div>
-                `;
-                
-                card.addEventListener('click', () => openModal(item.image));
-                grid.appendChild(card);
-            });
-        }
-
-        function initializeMenuFilters() {
-            const filters = document.querySelectorAll('.menu-filter');
-            
-            filters.forEach(filter => {
-                filter.addEventListener('click', () => {
-                    // Update active filter
-                    filters.forEach(f => {
-                        f.classList.remove('active', 'bg-blue-900', 'text-white');
-                        f.classList.add('bg-gray-200', 'text-gray-700');
-                    });
-                    filter.classList.add('active', 'bg-blue-900', 'text-white');
-                    filter.classList.remove('bg-gray-200', 'text-gray-700');
-                    
-                    // Filter menu items
-                    const category = filter.dataset.filter;
-                    const items = document.querySelectorAll('.menu-card');
-                    
-                    items.forEach(item => {
-                        if (category === 'all' || item.classList.contains(category)) {
-                            item.style.display = 'block';
-                            anime({
-                                targets: item,
-                                opacity: [0, 1],
-                                translateY: [20, 0],
-                                duration: 500,
-                                easing: 'easeOutQuad'
-                            });
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                });
-            });
-        }
-
-        // Story carousel
-        function initializeStoryCarousel() {
-            new Splide('#story-carousel', {
-                type: 'loop',
-                autoplay: true,
-                interval: 4000,
-                arrows: false,
-                pagination: true
-            }).mount();
-        }
-
-        // Forms initialization
-        function initializeForms() {
-            // Reservation form
-            const reservationForm = document.getElementById('reservation-form');
-            reservationForm.addEventListener('submit', handleReservationSubmit);
-            
-            // Career form
-            const careerForm = document.getElementById('career-form');
-            careerForm.addEventListener('submit', handleCareerSubmit);
-            
-            // Set timestamp for reservation form
-            reservationForm.querySelector('input[name="timestamp"]').value = new Date().toISOString();
-        }
-
-        async function handleReservationSubmit(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData.entries());
-            
-            try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbw5Fn--MhdQOGrN2-zYcG1WxZR9i6k1mtjsKzFvGtes-jBAytUP73XEG4CoDKHkNKOD/exec', {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                showNotification('Reservation submitted successfully! We will contact you soon.', 'success');
-                e.target.reset();
-            } catch (error) {
-                showNotification('Reservation submitted successfully! We will contact you soon.', 'success');
-                e.target.reset();
-            }
-        }
-
-        function handleCareerSubmit(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData.entries());
-            
-            // Create mailto link
-            const subject = encodeURIComponent(`Job Application - ${data.position}`);
-            const body = encodeURIComponent(
-                `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\nPosition: ${data.position}\n\nExperience:\n${data.experience}`
-            );
-            
-            window.location.href = `mailto:jarwuat.butsana@hotmail.com?subject=${subject}&body=${body}`;
-            
-            showNotification('Application prepared! Opening email client...', 'success');
-            e.target.reset();
-        }
-
-        // Particles background
-        function initializeParticles() {
-            new p5((p) => {
-                let particles = [];
-                
-                p.setup = () => {
-                    const canvas = p.createCanvas(window.innerWidth, window.innerHeight);
-                    canvas.parent('particles');
-                    canvas.style('position', 'absolute');
-                    canvas.style('top', '0');
-                    canvas.style('left', '0');
-                    canvas.style('z-index', '1');
-                    
-                    for (let i = 0; i < 50; i++) {
-                        particles.push({
-                            x: p.random(p.width),
-                            y: p.random(p.height),
-                            size: p.random(2, 6),
-                            speedX: p.random(-0.5, 0.5),
-                            speedY: p.random(-0.5, 0.5),
-                            opacity: p.random(0.1, 0.3)
-                        });
-                    }
-                };
-                
-                p.draw = () => {
-                    p.clear();
-                    
-                    particles.forEach(particle => {
-                        p.fill(245, 158, 11, particle.opacity * 255);
-                        p.noStroke();
-                        p.ellipse(particle.x, particle.y, particle.size);
-                        
-                        particle.x += particle.speedX;
-                        particle.y += particle.speedY;
-                        
-                        if (particle.x < 0 || particle.x > p.width) particle.speedX *= -1;
-                        if (particle.y < 0 || particle.y > p.height) particle.speedY *= -1;
-                    });
-                };
-                
-                p.windowResized = () => {
-                    p.resizeCanvas(window.innerWidth, window.innerHeight);
-                };
-            });
-        }
-
-        // Admin panel
-        function initializeAdminPanel() {
-            const imageUpload = document.getElementById('image-upload');
-            imageUpload.addEventListener('change', handleImageUpload);
-            
-            // Initialize analytics chart
-            const chartDom = document.getElementById('analytics-chart');
-            const myChart = echarts.init(chartDom);
-            
-            const option = {
-                title: {
-                    text: 'Daily Reservations',
-                    textStyle: { fontSize: 14 }
-                },
-                tooltip: {},
-                xAxis: {
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {},
-                series: [{
-                    name: 'Reservations',
-                    type: 'bar',
-                    data: [12, 8, 15, 22, 35, 45, 38],
-                    itemStyle: {
-                        color: '#f59e0b'
-                    }
-                }]
-            };
-            
-            myChart.setOption(option);
-        }
-
-        function handleImageUpload(e) {
-            const files = Array.from(e.target.files);
-            const preview = document.getElementById('upload-preview');
-            
-            preview.innerHTML = '';
-            
-            files.slice(0, 12).forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = 'w-full h-20 object-cover rounded cursor-pointer';
-                    img.addEventListener('click', () => addToMenu(e.target.result, file.name));
-                    preview.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function addToMenu(imageSrc, name) {
-            const newItem = {
-                id: menuData.length + 1,
-                name: name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-                category: 'mains',
-                price: '฿350',
-                image: imageSrc,
-                description: 'Freshly added menu item'
-            };
-            
-            menuData.push(newItem);
-            renderMenuGrid(menuData);
-            showNotification('Menu item added successfully!', 'success');
-        }
-
-        // Utility functions
-        function scrollToSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            section.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function openModal(imageSrc) {
-            const modal = document.getElementById('image-modal');
-            const modalImage = document.getElementById('modal-image');
-            modalImage.src = imageSrc;
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('image-modal').classList.remove('active');
-        }
-
-        function showAdminPanel() {
-            document.getElementById('admin-panel').classList.add('active');
-        }
-
-        function hideAdminPanel() {
-            document.getElementById('admin-panel').classList.remove('active');
-        }
-
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg ${
-                type === 'success' ? 'bg-green-500' : 'bg-blue-500'
-            } text-white`;
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            anime({
-                targets: notification,
-                translateX: [300, 0],
-                opacity: [0, 1],
-                duration: 500,
-                easing: 'easeOutQuad'
-            });
-            
-            setTimeout(() => {
-                anime({
-                    targets: notification,
-                    translateX: [0, 300],
-                    opacity: [1, 0],
-                    duration: 500,
-                    easing: 'easeInQuad',
-                    complete: () => notification.remove()
-                });
-            }, 3000);
-        }
-
-        // Navigation active state
-        window.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.nav-link');
-            
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= (sectionTop - 200)) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) {
-                    link.classList.add('active');
-                }
-            });
-        });
     </script>
-</body>
+  </body>
 </html>
